@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      // define association here
+      Restaurant.belongsTo(models.Category)
     }
   };
   Restaurant.init({
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 //     image: DataTypes.STRING
 //   }, {});
 //   Restaurant.associate = function (models) {
-//     // associations can be defined here
+//     Restaurant.belongsTo(models.Category)
 //   };
 //   return Restaurant;
 // };
