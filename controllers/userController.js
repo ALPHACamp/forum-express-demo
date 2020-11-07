@@ -49,6 +49,24 @@ const userController = {
     return User.findByPk(req.params.id).then(user => {
       return res.render('users/profile', { profile: user.toJSON() })
     })
+  },
+  editUser: (req, res) => {
+    return User.findByPk(req.params.id).then(user => {
+      return res.render('users/edit', { user: user.toJSON() })
+    })
+  },
+  putUser: (req, res) => {
+    if (Number(req.params.id) !== Number(req.user.id)) {
+      return res.redirect(`/users/${req.params.id}`)
+    }
+    return User.findByPk(req.params.id)
+      .then(user => {
+        user.update({
+          name: req.body.name
+        })
+      }).then(user => {
+        res.redirect(`/users/${req.params.id}`)
+      })
   }
 }
 
