@@ -56,10 +56,27 @@ const userController = {
   getUser: (req, res) => {
     return User.findByPk(req.params.id, {
       include: [
-        { model: Comment, include: Restaurant }
+        { model: Comment, include: Restaurant },
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' }
       ]
     }).then(user => {
-      return res.render('users/profile', { profile: user.toJSON() })
+      user = user.toJSON()
+      user.CommentsRestaurants = []
+      user.Comments.map((d) => {
+        if (!user.CommentsRestaurants.map(d => d.id).includes(d.RestaurantId)) {
+          user.CommentsRestaurants.push(d.Restaurant)
+          return d
+        }
+      })
+      console.log(user.CommentsRestaurants)
+      console.log(user.CommentsRestaurants.length)
+      const isFollowed = req.user.Followings.map(d => d.id).includes(user.id)
+      return res.render('users/profile', {
+        profile: user,
+        isFollowed: isFollowed
+      })
     })
   },
   editUser: (req, res) => {
