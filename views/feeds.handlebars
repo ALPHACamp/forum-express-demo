@@ -29,7 +29,7 @@
             <small>{{this.Category.name}}</small>
           </h4>
           <p>{{this.description}}</p>
-          {{moment this.createdAt}}
+          {{dateTimeFromNow this.createdAt}}
           <hr>
         </div>
         {{/each}}
@@ -49,7 +49,7 @@
           </h4>
           <p>{{this.text}}</p>
           by <a href="/users/{{this.User.id}}">{{this.User.name}}</a>
-          at {{moment this.createdAt}}
+          at {{dateTimeFromNow this.createdAt}}
           <hr>
         </div>
         {{/each}}

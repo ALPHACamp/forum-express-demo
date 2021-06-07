@@ -2,22 +2,19 @@ const db = require('../models')
 const Category = db.Category
 const categoryController = {
   getCategories: (req, res) => {
-    return Category.findAll({
-      raw: true,
-      nest: true
-    }).then(categories => {
-      if (req.params.id) {
-        Category.findByPk(req.params.id)
-          .then((category) => {
-            return res.render('admin/categories', {
-              categories: categories,
-              category: category.toJSON()
-            })
-          })
-      } else {
-        return res.render('admin/categories', { categories: categories })
-      }
-    })
+    return Promise.all([
+      Category.findAll({
+        raw: true,
+        nest: true,
+      }),
+      req.params.id && Category.findByPk(req.params.id)
+    ])
+      .then(([categories, category]) => {
+        return res.render('admin/categories', {
+          categories: categories,
+          category: category && category.toJSON()
+        })
+      })
   },
   postCategory: (req, res) => {
     if (!req.body.name) {
@@ -38,22 +35,14 @@ const categoryController = {
       return res.redirect('back')
     } else {
       return Category.findByPk(req.params.id)
-        .then((category) => {
-          category.update(req.body)
-            .then((category) => {
-              res.redirect('/admin/categories')
-            })
-        })
+        .then(category => category.update(req.body))
+        .then(() => res.redirect('/admin/categories'))
     }
   },
   deleteCategory: (req, res) => {
     return Category.findByPk(req.params.id)
-      .then((category) => {
-        category.destroy()
-          .then((category) => {
-            res.redirect('/admin/categories')
-          })
-      })
+      .then((category) => category.destroy())
+      .then(() => res.redirect('/admin/categories'))
   }
 }
 module.exports = categoryController

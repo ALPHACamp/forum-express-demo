@@ -8,19 +8,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      UserId: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: { model: 'users', key: 'id' }
       },
-      RestaurantId: {
+      restaurant_id: {
         type: Sequelize.INTEGER,
         references: { model: 'restaurants', key: 'id' }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

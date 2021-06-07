@@ -5,21 +5,17 @@ const commentController = {
   postComment: (req, res) => {
     return Comment.create({
       text: req.body.text,
-      RestaurantId: req.body.restaurantId,
-      UserId: req.user.id
+      restaurantId: req.body.restaurantId,
+      userId: req.user.id
     })
-      .then((comment) => {
+      .then(() => {
         res.redirect(`/restaurants/${req.body.restaurantId}`)
       })
   },
   deleteComment: (req, res) => {
     return Comment.findByPk(req.params.id)
-      .then((comment) => {
-        comment.destroy()
-          .then((comment) => {
-            res.redirect(`/restaurants/${comment.RestaurantId}`)
-          })
-      })
+      .then(comment => comment.destroy())
+      .then((comment) => res.redirect(`/restaurants/${comment.restaurantId}`))
   }
 }
 

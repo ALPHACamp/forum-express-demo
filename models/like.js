@@ -1,7 +1,5 @@
 'use strict'
-const {
-  Model
-} = require('sequelize')
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Like extends Model {
     /**
@@ -14,11 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Like.init({
-    UserId: DataTypes.INTEGER,
-    RestaurantId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    restaurantId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Like'
+    modelName: 'Like',
+    underscored: true
   })
   return Like
 }
