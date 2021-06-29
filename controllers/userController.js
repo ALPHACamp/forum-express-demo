@@ -65,7 +65,7 @@ const userController = {
         { model: Restaurant, as: 'FavoritedRestaurants' },
         { model: User, as: 'Followers' },
         { model: User, as: 'Followings' }
-      ],
+      ]
     }).then(user => {
       user = user.toJSON()
       user.CommentsRestaurants = []
