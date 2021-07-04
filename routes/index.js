@@ -1,72 +1,53 @@
-const helpers = require('../_helpers')
+const express = require('express')
+const router = express.Router()
 
-const restController = require('../controllers/restController.js')
-const adminController = require('../controllers/adminController.js')
-const userController = require('../controllers/userController.js')
-const categoryController = require('../controllers/categoryController.js')
-const commentController = require('../controllers/commentController.js')
+const passport = require('../config/passport')
 
-const multer = require('multer')
-const upload = multer({ dest: 'temp/' })
+const restController = require('../controllers/rest-controller')
+const userController = require('../controllers/user-controller')
+const commentController = require('../controllers/comment-controller')
 
-module.exports = (app, passport) => {
-  const authenticated = (req, res, next) => {
-    // if(req.isAuthenticated)
-    if (helpers.ensureAuthenticated(req)) {
-      return next()
-    }
-    res.redirect('/signin')
-  }
-  const authenticatedAdmin = (req, res, next) => {
-    // if(req.isAuthenticated)
-    if (helpers.ensureAuthenticated(req)) {
-      if (helpers.getUser(req).isAdmin) { return next() }
-      return res.redirect('/')
-    }
-    res.redirect('/signin')
-  }
+const upload = require('../middleware/multer')
+const { generalErrorHandler } = require('../middleware/error-handler')
+const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 
-  app.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
-  app.get('/restaurants', authenticated, restController.getRestaurants)
-  app.get('/restaurants/feeds', authenticated, restController.getFeeds)
-  app.get('/restaurants/top', authenticated, restController.getTopRestaurants)
-  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
-  app.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
+const admin = require('./modules/admin')
 
-  app.post('/comments', authenticated, commentController.postComment)
-  app.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
+router.get('/', authenticated, (req, res) => res.redirect('/restaurants'))
 
-  app.get('/users/top', authenticated, userController.getTopUser)
-  app.get('/users/:id', authenticated, userController.getUser)
-  app.get('/users/:id/edit', authenticated, userController.editUser)
-  app.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
+router.get('/restaurants', authenticated, restController.getRestaurants)
+router.get('/restaurants/feeds', authenticated, restController.getFeeds)
+router.get('/restaurants/top', authenticated, restController.getTopRestaurants)
+router.get('/restaurants/:id', authenticated, restController.getRestaurant)
+router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 
-  app.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
-  app.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
-  app.post('/like/:restaurantId', authenticated, userController.addLike)
-  app.delete('/like/:restaurantId', authenticated, userController.removeLike)
-  app.post('/following/:userId', authenticated, userController.addFollowing)
-  app.delete('/following/:userId', authenticated, userController.removeFollowing)
+router.post('/comments', authenticated, commentController.postComment)
+router.delete('/comments/:id', authenticatedAdmin, commentController.deleteComment)
 
-  app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
-  app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
-  app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
-  app.post('/admin/restaurants', authenticatedAdmin, upload.single('image'), adminController.postRestaurant)
-  app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
-  app.get('/admin/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
-  app.put('/admin/restaurants/:id', authenticatedAdmin, upload.single('image'), adminController.putRestaurant)
-  app.delete('/admin/restaurants/:id', authenticatedAdmin, adminController.deleteRestaurant)
-  app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
-  app.put('/admin/users/:id', authenticatedAdmin, adminController.putUsers)
-  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
-  app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
-  app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
-  app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
-  app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
+router.get('/users/top', authenticated, userController.getTopUser)
+router.get('/users/:id', authenticated, userController.getUser)
+router.get('/users/:id/edit', authenticated, userController.editUser)
+router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)
 
-  app.get('/signup', userController.signUpPage)
-  app.post('/signup', userController.signUp)
-  app.get('/signin', userController.signInPage)
-  app.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
-  app.get('/logout', userController.logout)
-}
+router.post('/favorite/:restaurantId', authenticated, userController.addFavorite)
+router.delete('/favorite/:restaurantId', authenticated, userController.removeFavorite)
+
+router.post('/like/:restaurantId', authenticated, userController.addLike)
+router.delete('/like/:restaurantId', authenticated, userController.removeLike)
+
+router.post('/following/:userId', authenticated, userController.addFollowing)
+router.delete('/following/:userId', authenticated, userController.removeFollowing)
+
+router.use('/admin', authenticatedAdmin, admin)
+
+router.get('/signup', userController.signUpPage)
+router.post('/signup', userController.signUp)
+
+router.get('/signin', userController.signInPage)
+router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
+
+router.get('/logout', userController.logout)
+
+router.use('/', generalErrorHandler)
+
+module.exports = router

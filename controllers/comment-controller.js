@@ -2,7 +2,7 @@ const db = require('../models')
 const Comment = db.Comment
 
 const commentController = {
-  postComment: (req, res) => {
+  postComment: (req, res, next) => {
     return Comment.create({
       text: req.body.text,
       restaurantId: req.body.restaurantId,
@@ -11,11 +11,17 @@ const commentController = {
       .then(() => {
         res.redirect(`/restaurants/${req.body.restaurantId}`)
       })
+      .catch(err => next(err))
   },
-  deleteComment: (req, res) => {
+  deleteComment: (req, res, next) => {
     return Comment.findByPk(req.params.id)
-      .then(comment => comment.destroy())
+      .then(comment => {
+        if (!comment) throw new Error("Comment didn't exist!'")
+
+        return comment.destroy()
+      })
       .then(deletedComment => res.redirect(`/restaurants/${deletedComment.restaurantId}`))
+      .catch(err => next(err))
   }
 }
 

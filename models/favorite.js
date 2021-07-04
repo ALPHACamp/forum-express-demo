@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate (models) {
       // define association here
     }
-  };
+  }
   Favorite.init({
     userId: DataTypes.INTEGER,
     restaurantId: DataTypes.INTEGER

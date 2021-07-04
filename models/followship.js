@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate (models) {
       // define association here
     }
-  };
+  }
   Followship.init({
     followerId: DataTypes.INTEGER,
     followingId: DataTypes.INTEGER

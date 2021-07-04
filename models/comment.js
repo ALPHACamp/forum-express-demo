@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       Comment.belongsTo(models.Restaurant)
       Comment.belongsTo(models.User)
     }
-  };
+  }
   Comment.init({
     text: DataTypes.STRING,
     userId: DataTypes.INTEGER,

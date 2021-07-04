@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'Followings'
       })
     }
-  };
+  }
   User.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,

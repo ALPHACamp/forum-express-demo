@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'LikedUsers'
       })
     }
-  };
+  }
   Restaurant.init({
     name: DataTypes.STRING,
     tel: DataTypes.STRING,
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     openingHours: DataTypes.STRING,
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
-    viewCounts: DataTypes.INTEGER,
+    viewCount: DataTypes.INTEGER,
     categoryId: DataTypes.INTEGER
   }, {
     sequelize,
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
 }
 
 // 以下是使用 sequelize.define 的版本
-// 'use strict';
+// 'use strict'
 // module.exports = (sequelize, DataTypes) => {
 //   const Restaurant = sequelize.define('Restaurant', {
 //     name: DataTypes.STRING,
@@ -51,10 +51,10 @@ module.exports = (sequelize, DataTypes) => {
 //     description: DataTypes.TEXT,
 //     image: DataTypes.STRING,
 //     categoryId: DataTypes.INTEGER
-//   }, {});
+//   }, {})
 //   Restaurant.associate = function (models) {
 //     // associations can be defined here
 //     Restaurant.belongsTo(models.Category)
-//   };
-//   return Restaurant;
-// };
+//   }
+//   return Restaurant
+// }
