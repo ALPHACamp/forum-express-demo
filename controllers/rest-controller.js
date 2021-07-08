@@ -4,20 +4,22 @@ const Category = db.Category
 const Comment = db.Comment
 const User = db.User
 
-const pageLimit = 9
 
 const restController = {
   getRestaurants: (req, res, next) => {
-    let offset = 0
+    const DEFAULT_PAGE_LIMIT = 9
+
+    const pageLimit = req.query.limit || DEFAULT_PAGE_LIMIT
+    const offset = req.query.page ? (req.query.page - 1) * pageLimit : 0
+
     const whereQuery = {}
     let categoryId = ''
-    if (req.query.page) {
-      offset = (req.query.page - 1) * pageLimit
-    }
+
     if (req.query.categoryId) {
       categoryId = Number(req.query.categoryId)
       whereQuery.categoryId = categoryId
     }
+
     return Promise.all([
       Restaurant.findAndCountAll({
         include: [Category],
@@ -51,8 +53,12 @@ const restController = {
           restaurants: data,
           categories: categories,
           categoryId: categoryId,
-          page: page,
+
+          // pagination
+          currentPage: page,
           totalPage: totalPage,
+          // limit: pageLimit,
+          // total: restaurants.count,
           prev: prev,
           next: next
         })
@@ -149,6 +155,7 @@ const restController = {
             ...rest,
             isFavorited: req.user.FavoritedRestaurants.some(f => f.id === rest.id)
           }))
+          console.log(restaurants)
         res.render('topRestaurants', {
           restaurants: restaurants,
           isAuthenticated: req.isAuthenticated

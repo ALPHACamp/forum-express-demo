@@ -10,11 +10,11 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' }
+        references: { model: 'Users', key: 'id' }
       },
       restaurant_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'restaurants', key: 'id' }
+        references: { model: 'Restaurants', key: 'id' }
       },
       created_at: {
         allowNull: false,
