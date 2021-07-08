@@ -11,19 +11,19 @@ module.exports = {
       text: {
         type: Sequelize.STRING
       },
-      UserId: {
+      user_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' }
+        references: { model: 'Users', key: 'id' }
       },
-      RestaurantId: {
+      restaurant_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'restaurants', key: 'id' }
+        references: { model: 'Restaurants', key: 'id' }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

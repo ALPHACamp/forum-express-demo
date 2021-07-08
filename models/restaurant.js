@@ -1,7 +1,5 @@
 'use strict'
-const {
-  Model
-} = require('sequelize')
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Restaurant extends Model {
     /**
@@ -15,47 +13,48 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.hasMany(models.Comment)
       Restaurant.belongsToMany(models.User, {
         through: models.Favorite,
-        foreignKey: 'RestaurantId',
+        foreignKey: 'restaurantId',
         as: 'FavoritedUsers'
       })
       Restaurant.belongsToMany(models.User, {
         through: models.Like,
-        foreignKey: 'RestaurantId',
+        foreignKey: 'restaurantId',
         as: 'LikedUsers'
       })
     }
-  };
+  }
   Restaurant.init({
     name: DataTypes.STRING,
     tel: DataTypes.STRING,
     address: DataTypes.STRING,
-    opening_hours: DataTypes.STRING,
+    openingHours: DataTypes.STRING,
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
-    viewCounts: DataTypes.INTEGER,
-    CategoryId: DataTypes.INTEGER
+    viewCount: DataTypes.INTEGER,
+    categoryId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Restaurant'
+    modelName: 'Restaurant',
+    underscored: true
   })
   return Restaurant
 }
 
 // 以下是使用 sequelize.define 的版本
-// 'use strict';
+// 'use strict'
 // module.exports = (sequelize, DataTypes) => {
 //   const Restaurant = sequelize.define('Restaurant', {
 //     name: DataTypes.STRING,
 //     tel: DataTypes.STRING,
 //     address: DataTypes.STRING,
-//     opening_hours: DataTypes.STRING,
+//     openingHours: DataTypes.STRING,
 //     description: DataTypes.TEXT,
 //     image: DataTypes.STRING,
-//     CategoryId: DataTypes.INTEGER
-//   }, {});
+//     categoryId: DataTypes.INTEGER
+//   }, {})
 //   Restaurant.associate = function (models) {
 //     // associations can be defined here
 //     Restaurant.belongsTo(models.Category)
-//   };
-//   return Restaurant;
-// };
+//   }
+//   return Restaurant
+// }
